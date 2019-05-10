@@ -15,7 +15,8 @@
 
 	<!-- 加载配置文件 -->
 	<context:property-placeholder location="classpath:db.properties" />
-	<!-- 数据库连接池 -->
+	
+	<!-- 数据库连接池 
 	<bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource"
 		destroy-method="close">
 		<property name="driverClassName" value="${jdbc.driver}" />
@@ -25,7 +26,37 @@
 		<property name="maxActive" value="10" />
 		<property name="maxIdle" value="5" />
 	</bean>
+	-->
+	
+	 <!-- 配置数据源,数据库连接池 -->
+    <bean id="datasource_one" class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close">
+        <property name="driverClassName" value="${jdbc.driver}" />
+		<property name="url" value="${jdbc.url}" />
+		<property name="username" value="${jdbc.username}" />
+		<property name="password" value="${jdbc.password}" />
+		<property name="maxActive" value="10" />
+		<property name="maxIdle" value="5" />
+    </bean>
 
+    <bean id="datasource_two" class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close">
+       <property name="driverClassName" value="${jdbc.driver}" />
+		<property name="url" value="${jdbc.url2}" />
+		<property name="username" value="${jdbc.username2}" />
+		<property name="password" value="${jdbc.password2}" />
+		<property name="maxActive" value="10" />
+		<property name="maxIdle" value="5" />
+    </bean>
+
+    <!-- 动态配置数据源 -->
+    <bean id="dataSource" class="com.king.ssm.datasource.DynamicDataSource">
+        <property name="targetDataSources">
+            <map key-type="java.lang.String">
+                <entry value-ref="datasource_one" key="datasource_one"></entry>
+                <entry value-ref="datasource_two" key="datasource_two"></entry>
+            </map>
+        </property>
+        <property name="defaultTargetDataSource" ref="datasource_one"></property>      <!-- 默认使用ds1的数据源 -->
+    </bean>
 
 	<!-- SqlsessionFactory -->
 	<bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
@@ -48,8 +79,6 @@
 		<property name="basePackage" value="com.king.ssm.mapper"/>
 		<!-- 使用sqlSessionFactoryBeanName -->
 		<property name="sqlSessionFactoryBeanName" value="sqlSessionFactory"/>
-		
-		
 	</bean>
 	
 </beans>

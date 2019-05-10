@@ -21,9 +21,8 @@ public class HomeController {
 
 		System.out.println("=================================test111");
 		List<UserInfo> users = testService.getUsers(null);
-		for (UserInfo userInfo : users) {
-			System.out.println(userInfo);
-		}
+		testService.getHeros();
+		testService.getUsers(null);
 		System.out.println("=================================test222");
 		return "test";
 	}
